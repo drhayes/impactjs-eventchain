@@ -66,21 +66,19 @@ ig.module(
       times = times || Infinity;
       var originalTimes = times;
       var stepsCopy;
-      steps.push((function(currentIndex) {
-        return function() {
-          times -= 1;
-          if (times > 0) {
-            var args = stepsCopy.slice(0);
-            args.unshift(currentIndex, 0);
-            steps.splice.apply(steps, args);
-          } else {
-            // For successive repeats.
-            times = originalTimes;
-          }
-          // End.
-          steps.shift();
-        };
-      })(steps.length - 1));
+      steps.push(function() {
+        times -= 1;
+        if (times > 0) {
+          var args = stepsCopy.slice(0);
+          args.unshift(1, 0);
+          [].splice.apply(steps, args);
+        } else {
+          // For successive repeats.
+          times = originalTimes;
+        }
+        // End.
+        steps.shift();
+      });
       stepsCopy = steps.slice(0);
       return this;
     };
