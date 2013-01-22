@@ -3,6 +3,8 @@ impactjs-eventchain
 
 A function to help script sequential events in [ImpactJS][].
 
+[![Build Status](https://travis-ci.org/drhayes/impactjs-eventchain.png?branch=master)](undefined)
+
 Overview
 --------
 
@@ -26,6 +28,15 @@ Usage
           ig.game.spawnEntity('EntityWeakerThing', 10, 10);
         })
       .repeat();         // ...and repeat the whole thing forever.
+
+Don't forget that `this` doesn't work within those callbacks as it refers to the EventChain instance itself! You'll need to do something like this to get around that:
+
+    var self = this;
+    var chain = new EventChain()
+      .wait(10)
+      .then(function() {
+        self.kill();
+        });
 
 License
 -------
