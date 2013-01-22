@@ -1,0 +1,32 @@
+{
+  "name": "impactjs-eventchain",
+  "version": "0.1.0",
+  "description": "Utility to help time sequential events in ImpactJS.",
+  "homepage": "https://github.com/drhayes/impactjs-eventchain",
+  "author": "David Hayes <drhayes@gmail.com> (http://davidrhayes.com)",
+  "keywords": [
+    "impactjs"
+  ],
+  "main": "./eventChain.js",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drhayes/impactjs-eventchain.git"
+  },
+  "bugs": {
+    "url": "https://github.com/drhayes/impactjs-eventchain/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "make test"
+  }
+}
