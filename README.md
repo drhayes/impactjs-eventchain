@@ -3,7 +3,7 @@ impactjs-eventchain
 
 A function to help script sequential events in [ImpactJS][].
 
-[![Build Status](https://travis-ci.org/drhayes/impactjs-eventchain.png?branch=master)](undefined)
+[![Build Status](https://travis-ci.org/drhayes/impactjs-eventchain.png?branch=master)](https://travis-ci.org/drhayes/impactjs-eventchain)
 
 Overview
 --------
