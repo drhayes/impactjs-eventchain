@@ -9,10 +9,6 @@ ig.module(
 
 global.EventChain = function() {
   var steps, update;
-  // Make sure we get called with new.
-  if (this === global) {
-    return new global.EventChain();
-  }
 
   steps = [];
 
