@@ -21,7 +21,7 @@ var ig = global.ig = {
 };
 
 // The module declares EventChain globally.
-require('../eventChain.js');
+var EventChain = require('../eventChain.js').EventChain;
 
 describe('eventChain', function() {
   var chain;
@@ -30,7 +30,7 @@ describe('eventChain', function() {
     // Reset ig namespace state.
     ig.system.tick = 0;
     // Instantiate a new chain.
-    chain = new EventChain();
+    chain = EventChain();
   });
 
   it('defines some functions', function() {
