@@ -141,4 +141,50 @@ describe('eventChain', function() {
     }
     assert(counter === 4);
   });
+
+  it('calls then callback within given context', function() {
+    var Fake = function() {
+      this.called = false;
+      this.callback = function() {
+        this.called = true;
+      }
+      this.chain = EventChain(this)
+        .then(this.callback);
+    };
+    var f = new Fake();
+    f.chain();
+    assert(f.called);
+  });
+
+  it('calls during callback within given context', function() {
+    var Fake = function() {
+      this.called = false;
+      this.callback = function() {
+        this.called = true;
+      }
+      this.chain = EventChain(this)
+        .wait(1)
+        .during(this.callback);
+    };
+    var f = new Fake();
+    f.chain();
+    assert(f.called);
+  });
+
+  it('calls every callback within given context', function() {
+    ig.system.tick = .1;
+    var Fake = function() {
+      this.called = false;
+      this.callback = function() {
+        this.called = true;
+      }
+      this.chain = EventChain(this)
+        .wait(1)
+        .every(.1, this.callback);
+    };
+    var f = new Fake();
+    f.chain(); // first wait
+    f.chain(); // first then
+    assert(f.called);
+  });
 });

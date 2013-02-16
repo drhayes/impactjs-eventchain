@@ -9,7 +9,7 @@ ig.module(
 
   'use strict';
 
-  global.EventChain = function() {
+  global.EventChain = function(context) {
     var steps, update;
 
     steps = [];
@@ -24,7 +24,7 @@ ig.module(
     update.then = function(doThis) {
       steps.push(function() {
         // Update.
-        doThis();
+        doThis.call(context);
         // End.
         steps.shift();
       });
@@ -54,7 +54,7 @@ ig.module(
       }
       var func = steps[steps.length - 1];
       steps[steps.length - 1] = function() {
-        doThis();
+        doThis.call(context);
         func();
       };
       return this;
@@ -83,7 +83,7 @@ ig.module(
 
     update.every = function(sec, doThis) {
       update.during(
-        new global.EventChain()
+        global.EventChain(context)
           .wait(sec)
           .then(doThis)
           .repeat()
