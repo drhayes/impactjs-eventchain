@@ -91,7 +91,22 @@ ig.module(
       return this;
     };
 
-    // Returned from this constructor thing.
+    update.orUntil = function(predicate) {
+      if (!steps) {
+        throw new Error('orUntil only works with previous step!');
+      }
+      var func = steps[steps.length - 1];
+      steps[steps.length - 1] = function() {
+        if (predicate.call(context)) {
+          steps.shift();
+          return;
+        }
+        func();
+      };
+      return this;
+    };
+
+    // Returned from this factory thing.
     return update;
   };
 

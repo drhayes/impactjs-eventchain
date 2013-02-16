@@ -128,7 +128,7 @@ describe('eventChain', function() {
   });
 
   it('can do something every N seconds', function() {
-    ig.system.tick = .1;
+    ig.system.tick = 0.1;
     var counter = 0;
     chain
       .wait(5)
@@ -147,7 +147,7 @@ describe('eventChain', function() {
       this.called = false;
       this.callback = function() {
         this.called = true;
-      }
+      };
       this.chain = EventChain(this)
         .then(this.callback);
     };
@@ -161,7 +161,7 @@ describe('eventChain', function() {
       this.called = false;
       this.callback = function() {
         this.called = true;
-      }
+      };
       this.chain = EventChain(this)
         .wait(1)
         .during(this.callback);
@@ -172,19 +172,63 @@ describe('eventChain', function() {
   });
 
   it('calls every callback within given context', function() {
-    ig.system.tick = .1;
+    ig.system.tick = 0.1;
     var Fake = function() {
       this.called = false;
       this.callback = function() {
         this.called = true;
-      }
+      };
       this.chain = EventChain(this)
         .wait(1)
-        .every(.1, this.callback);
+        .every(0.1, this.callback);
     };
     var f = new Fake();
     f.chain(); // first wait
     f.chain(); // first then
     assert(f.called);
+  });
+
+  it('can end a wait conditionally', function() {
+    ig.system.tick = 0.1;
+    var counter1 = 0, counter2 = 0;
+    chain
+      .wait(5)
+      .orUntil(function() {
+        if (counter1 > 5) {
+          return true;
+        }
+        counter1 += 1;
+      })
+      .then(function() {
+        counter2 += 1;
+      })
+      .repeat();
+    // Wait is not super exact.
+    for (var i = 0; i < 12; i++) {
+      chain();
+    }
+    assert(counter1 === 6);
+    assert(counter2 === 2);
+  });
+
+  it('can predicate a wait with a context', function() {
+    var Fake = function() {
+      this.counter = 0;
+      this.chain = EventChain(this)
+        .wait(5)
+        .orUntil(function() {
+          if (this.counter > 5) {
+            return false;
+          }
+          this.counter += 1;
+        });
+    };
+    ig.system.tick = 0.1;
+    var f = new Fake();
+    // Wait is not super exact.
+    for (var i = 0; i < 6; i++) {
+      f.chain();
+    }
+    assert(f.counter === 6);
   });
 });
