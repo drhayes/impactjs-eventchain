@@ -1,45 +1,91 @@
-impactjs-eventchain
-===================
+# impactjs-eventchain
 
 A function to help script sequential events in [ImpactJS][].
 
 [![Build Status](https://travis-ci.org/drhayes/impactjs-eventchain.png?branch=master)](https://travis-ci.org/drhayes/impactjs-eventchain)
 
-Overview
---------
+## Overview
+
+Use an EventChain where you would normally use `ig.system.tick` and a bunch of counters to try and time a scripted series of events. Each link in the chain is a step in your script.
+
+A few concrete examples:
+
+  * Spawn a monster every 5 seconds: `wait(5).then(function() { ig.game.spawnEntity...; }).repeat()`
+  * Time a player respawn: player dies, wait 3 seconds, spawn player entity: `then(this.kill).wait(3).then(function() { ig.game.spawnEntity...; })`
+  * Make a crumbling platform that wobbles every once in a while before `kill`ing itself: `wait(0.3).then(this.wobble).wait(0.3).then(this.wobble).wait(0.3).then(this.kill)`
 
 Be sure to check out my [blog post][blogpost] explaining the rationale behind this class.
 
-Because I got sick of littering my ImpactJS entities with timing code in order to script complex behaviors, I wrote a collection of functions that can time everything for me.
+## Usage
 
-The intent is the event chain gets invoked every frame in an entity's `update` method.
+`EventChain` has one optional parameter: the context in which it should execute the callbacks. That way, you can write `.then(this.kill)` and the chain will Do The Right Thing. If you don't need any special context, don't pass in that param.
 
-Usage
------
+You probably want to create an `EventChain` in the `init` method of an entity:
 
-    var chain = new EventChain()
-      .wait(10)           // Wait for 10 seconds...
-      .then(function() {  // ...then spawn a baddie...
-          ig.game.spawnEntity('EntityKillerThing', 10, 10);
-        })
-      .repeat(3)          // ...repeat that 3 times...
-      .wait(5)            // ...wait some more...
-      .then(function() {  // ...then spawn a lesser baddie...
-          ig.game.spawnEntity('EntityWeakerThing', 10, 10);
-        })
-      .repeat();         // ...and repeat the whole thing forever.
+    init: function(x, y, settings) {
+      this.parent(x, y, settings);
+      this.chain = EventChain(this)
+        .wait(10)           // Wait for 10 seconds...
+        .then(function() {  // ...then spawn a baddie...
+            ig.game.spawnEntity('EntityKillerThing', 10, 10);
+          })
+        .repeat(3)          // ...repeat that 3 times...
+        .wait(5)            // ...wait some more...
+        .then(function() {  // ...then spawn a lesser baddie...
+            ig.game.spawnEntity('EntityWeakerThing', 10, 10);
+          })
+        .repeat();         // ...and repeat the whole thing forever.
+    },
 
-Don't forget that `this` doesn't work within those callbacks as it refers to the EventChain instance itself! You'll need to do something like this to get around that:
+And then invoke it in your `update` method like so:
 
-    var self = this;
-    var chain = new EventChain()
-      .wait(10)
-      .then(function() {
-        self.kill();
-        });
+    update: function() {
+      this.chain();
+    },
 
-License
--------
+## Available Methods
+
+Here's what the chain can do for you.
+
+### `then`
+
+    .then(callback)
+
+The workhorse of an `EventChain`. When this link is reached your `callback` will be executed.
+
+### `wait`
+
+    .wait(numberOfSeconds)
+
+Blocks the chain until `numberOfSeconds` has elapsed. Uses `ig.system.tick` to mark the passage of time.
+
+### `during`
+
+    .during(callback)
+
+Execute the `callback` during a wait. If called in an `update`, for example, will be executed every frame during a `wait`.
+
+### `repeat`
+
+    .repeat()
+    // or
+    .repeat(numberOfTimes)
+
+Repeats all previous links in the chain `numberOfTimes` times. If not given, will repeat itself forever. `repeat`s may be nested for multiplicative fun!
+
+### `every`
+
+    .every(numberOfSeconds, callback)
+
+Much like `during`, only useful when used after a `wait`. Every `numberOfSeconds` seconds it will execute the `callback`.
+
+### `orUntil`
+
+    .orUntil(predicate)
+
+`predicate` is a function that returns `true` or `false`. Only useful when used after a `wait`. Will "break" the wait if the `predicate` returns `true`.
+
+## License
 
 Copyright (c) 2013 David Hayes
 
