@@ -16,6 +16,21 @@ A few concrete examples:
 
 Be sure to check out my [blog post][blogpost] explaining the rationale behind this class.
 
+## Install
+
+  1. Download eventChain.js (either by [downloading it directly][download] or by cloning the repo).
+  2. EventChain's module is declared as `game.system.eventChain`, so you need to create a `system` directory inside the `lib/game` directory of your game.
+  3. Copy eventChain.js to your new `lib/game/system` directory.
+
+To use EventChain in your code, add its full name to the `require` statement in the module you're using it in, like this:
+
+    .require(
+       // ... other modules go here ...
+       'game.system.eventChain'
+    ).define(//...
+    
+You should be all set.
+
 ## Usage
 
 `EventChain` has one optional parameter: the context in which it should execute the callbacks. That way, you can write `.then(this.kill)` and the chain will Do The Right Thing. If you don't need any special context, don't pass in that param.
@@ -97,3 +112,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
   [impactjs]: http://impactjs.com
   [blogpost]: http://blog.davidrhayes.com/post/40585105928/event-chains
+  [download]: https://raw.github.com/drhayes/impactjs-eventchain/master/eventChain.js
