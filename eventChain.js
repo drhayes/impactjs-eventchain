@@ -106,6 +106,15 @@ ig.module(
       return this;
     };
 
+    update.waitForAnimation = function(animation) {
+      steps.push(function() {
+        if (animation.loopCount > 0) {
+          steps.shift();
+        }
+      });
+      return this;
+    };
+
     // Returned from this factory thing.
     return update;
   };

@@ -231,4 +231,26 @@ describe('eventChain', function() {
     }
     assert(f.counter === 6);
   });
+
+  it('can wait until an animation finishes', function() {
+    var fakeAnimation = {
+      loopCount: 0
+    };
+    var done = false;
+    chain
+      .waitForAnimation(fakeAnimation)
+      .then(function() {
+        done = true;
+      });
+    chain();
+    assert(!done);
+    chain();
+    assert(!done);
+    chain();
+    assert(!done);
+    fakeAnimation.loopCount = 1;
+    chain();
+    chain();
+    assert(done);
+  });
 });
