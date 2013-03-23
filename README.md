@@ -100,6 +100,35 @@ Much like `during`, only useful when used after a `wait`. Every `numberOfSeconds
 
 `predicate` is a function that returns `true` or `false`. Only useful when used after a `wait`. Will "break" the wait if the `predicate` returns `true`.
 
+### `waitForAnimation`
+
+    .waitForAnimation([animation, ][, times])
+
+`animation` is an instance of ImpactJS' [Animation][] type. `times` is a number of times for the animation to
+repeat. Both are optional. You can call `waitForAnimation` like this:
+
+    var chain = EventChain(this)
+      .waitForAnimation()
+      .then(function() {});
+
+...and, assuming `this` refers to an instance of Entity, it will wait for the current animation to complete.
+
+You can also do this:
+
+    var chain = EventChain()
+      .waitForAnimation(randomAnimation, 3)
+      .then(function() {});
+
+...which will wait for `randomAnimation` to run 3 times before continuing on.
+
+You can also do this:
+
+    var chain = EventChain(this)
+      .waitForAnimation(42)
+      .then(function() {});
+
+...which will wait for the `currentAnim` to play 42 times before continuing.
+
 ## License
 
 Copyright (c) 2013 David Hayes
@@ -113,3 +142,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   [impactjs]: http://impactjs.com
   [blogpost]: http://blog.davidrhayes.com/post/40585105928/event-chains
   [download]: https://raw.github.com/drhayes/impactjs-eventchain/master/eventChain.js
+  [animation]: http://impactjs.com/documentation/class-reference/animation
