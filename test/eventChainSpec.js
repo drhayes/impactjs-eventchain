@@ -1,5 +1,5 @@
 /*global require: true, global: true, describe: true, beforeEach: true,
-  it: true, EventChain: true */
+  it: true */
 var assert = require('assert');
 
 // Fake the Impact global namespace with good enough definitions.

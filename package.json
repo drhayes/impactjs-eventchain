@@ -24,9 +24,13 @@
     }
   ],
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.3.0",
+    "grunt-simple-mocha": "~0.3.2",
+    "grunt-contrib-watch": "~0.3.1"
   },
   "scripts": {
-    "test": "make test"
+    "test": "grunt travis --verbose"
   }
 }
