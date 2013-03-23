@@ -253,4 +253,82 @@ describe('eventChain', function() {
     chain();
     assert(done);
   });
+
+  it('can wait until an animation loops n times', function(){
+    var fakeAnimation = {
+      loopCount: 0
+    };
+    var done = false;
+    chain
+      .waitForAnimation(fakeAnimation, 2)
+      .then(function() {
+        done = true;
+      });
+    chain();
+    assert(!done);
+    chain();
+    assert(!done);
+    chain();
+    assert(!done);
+    fakeAnimation.loopCount = 1;
+    chain();
+    chain();
+    assert(!done);
+    fakeAnimation.loopCount = 2;
+    chain();
+    chain();
+    assert(done);
+  });
+
+  it('can wait for current animation if none specified', function() {
+    var done = false;
+    var Fake = function() {
+      // This is supposed to mimic an Entity's currentAnim property.
+      this.currentAnim = {
+        loopCount: 0 
+      };
+      this.chain = EventChain(this)
+        .waitForAnimation()
+        .then(function() {
+          done = true;
+        });
+    };
+    var f = new Fake();
+    f.chain();
+    assert(!done);
+    f.chain();
+    assert(!done);
+    f.currentAnim.loopCount = 1;
+    f.chain();
+    f.chain();
+    assert(done);
+  });
+
+  it('can wait for current animation to run n times if none specified', function() {
+    var done = false;
+    var Fake = function() {
+      // This is supposed to mimic an Entity's currentAnim property.
+      this.currentAnim = {
+        loopCount: 0 
+      };
+      this.chain = EventChain(this)
+        .waitForAnimation(2)
+        .then(function() {
+          done = true;
+        });
+    };
+    var f = new Fake();
+    f.chain();
+    assert(!done);
+    f.chain();
+    assert(!done);
+    f.currentAnim.loopCount = 1;
+    f.chain();
+    f.chain();
+    assert(!done);
+    f.currentAnim.loopCount = 2;
+    f.chain();
+    f.chain();
+    assert(done);
+  });
 });

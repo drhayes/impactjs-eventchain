@@ -106,9 +106,21 @@ ig.module(
       return this;
     };
 
-    update.waitForAnimation = function(animation) {
+    update.waitForAnimation = function(animation, times) {
+      // If we were not given an animation, then look in context for
+      // a currentAnim property.
+      if (!times) {
+        times = 1;
+        if (typeof animation === 'number') {
+          times = animation;
+          animation = context.currentAnim;
+        }
+        if (typeof animation === 'undefined') {
+          animation = context.currentAnim;
+        }
+      }
       steps.push(function() {
-        if (animation.loopCount > 0) {
+        if (animation.loopCount >= times) {
           steps.shift();
         }
       });
