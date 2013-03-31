@@ -331,4 +331,26 @@ describe('eventChain', function() {
     f.chain();
     assert(done);
   });
+
+  it('has a mixin function to add new event chain functions', function() {
+    var context = {
+      usedArg: null,
+      addedStep: false
+    }
+    EventChain.mixin('mixinTest', function(context, steps) {
+      return function(arg) {
+        context.usedArg = arg;
+        steps.push(function() {
+          context.addedStep = true;
+          steps.shift();
+        });
+        return this;
+      };
+    });
+    var chain = EventChain(context)
+      .mixinTest('argument');
+    assert(context.usedArg === 'argument');
+    chain();
+    assert(context.addedStep);
+  });
 });

@@ -9,6 +9,8 @@ ig.module(
 
   'use strict';
 
+  var mixins = {};
+
   global.EventChain = function(context) {
     var steps, update;
 
@@ -21,7 +23,21 @@ ig.module(
       }
     };
 
-    update.then = function(doThis) {
+    for (var name in mixins)
+    {
+      update[name] = mixins[name](context, steps);
+    }
+
+    // Returned from this factory thing.
+    return update;
+  };
+
+  global.EventChain.mixin = function(name, fn) {
+    mixins[name] = fn;
+  }
+
+  global.EventChain.mixin('then', function(context, steps) {
+    return function(doThis) {
       steps.push(function() {
         // Update.
         doThis.call(context);
@@ -29,9 +45,11 @@ ig.module(
         steps.shift();
       });
       return this;
-    };
+    }
+  });
 
-    update.wait = function(secs) {
+  global.EventChain.mixin('wait', function(context, steps) {
+    return function(secs) {
       var decrement = secs;
       steps.push(function() {
         // Update.
@@ -46,9 +64,11 @@ ig.module(
         }
       });
       return this;
-    };
+    }
+  });
 
-    update.during = function(doThis) {
+  global.EventChain.mixin('during', function(context, steps) {
+    return function(doThis) {
       if (!steps) {
         throw new Error('during only works with previous step!');
       }
@@ -58,9 +78,11 @@ ig.module(
         func();
       };
       return this;
-    };
+    }
+  });
 
-    update.repeat = function(times) {
+  global.EventChain.mixin('repeat', function(context, steps) {
+    return function(times) {
       var stepsCopy, originalTimes;
       times = times || Infinity;
       originalTimes = times;
@@ -79,19 +101,22 @@ ig.module(
       });
       stepsCopy = steps.slice(0);
       return this;
-    };
+    }
+  });
 
-    update.every = function(sec, doThis) {
-      update.during(
+  global.EventChain.mixin('every', function(context, steps) {
+    return function(sec, doThis) {
+      return this.during(
         global.EventChain(context)
           .wait(sec)
           .then(doThis)
           .repeat()
       );
-      return this;
-    };
+    }
+  });
 
-    update.orUntil = function(predicate) {
+  global.EventChain.mixin('orUntil', function(context, steps) {
+    return function(predicate) {
       if (!steps) {
         throw new Error('orUntil only works with previous step!');
       }
@@ -104,9 +129,11 @@ ig.module(
         func();
       };
       return this;
-    };
+    }
+  });
 
-    update.waitForAnimation = function(animation, times) {
+  global.EventChain.mixin('waitForAnimation', function(context, steps) {
+    return function(animation, times) {
       // If we were not given an animation, then look in context for
       // a currentAnim property.
       if (!times) {
@@ -125,10 +152,7 @@ ig.module(
         }
       });
       return this;
-    };
-
-    // Returned from this factory thing.
-    return update;
-  };
+    }
+  });
 
 }).bind(this, this));
