@@ -34,7 +34,7 @@ ig.module(
 
   global.EventChain.mixin = function(name, fn) {
     mixins[name] = fn;
-  }
+  };
 
   global.EventChain.mixin('then', function(context, steps) {
     return function(doThis) {
@@ -45,7 +45,7 @@ ig.module(
         steps.shift();
       });
       return this;
-    }
+    };
   });
 
   global.EventChain.mixin('wait', function(context, steps) {
@@ -64,7 +64,7 @@ ig.module(
         }
       });
       return this;
-    }
+    };
   });
 
   global.EventChain.mixin('during', function(context, steps) {
@@ -78,7 +78,7 @@ ig.module(
         func();
       };
       return this;
-    }
+    };
   });
 
   global.EventChain.mixin('repeat', function(context, steps) {
@@ -101,7 +101,7 @@ ig.module(
       });
       stepsCopy = steps.slice(0);
       return this;
-    }
+    };
   });
 
   global.EventChain.mixin('every', function(context, steps) {
@@ -112,7 +112,7 @@ ig.module(
           .then(doThis)
           .repeat()
       );
-    }
+    };
   });
 
   global.EventChain.mixin('orUntil', function(context, steps) {
@@ -129,7 +129,7 @@ ig.module(
         func();
       };
       return this;
-    }
+    };
   });
 
   global.EventChain.mixin('waitForAnimation', function(context, steps) {
@@ -152,7 +152,7 @@ ig.module(
         }
       });
       return this;
-    }
+    };
   });
 
 }).bind(this, this));

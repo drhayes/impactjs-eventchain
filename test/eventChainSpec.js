@@ -336,7 +336,7 @@ describe('eventChain', function() {
     var context = {
       usedArg: null,
       addedStep: false
-    }
+    };
     EventChain.mixin('mixinTest', function(context, steps) {
       return function(arg) {
         context.usedArg = arg;
