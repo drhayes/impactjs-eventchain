@@ -58,6 +58,21 @@ And then invoke it in your `update` method like so:
       this.chain();
     },
 
+## Mixins
+
+If `EventChain` in its current form doesn't suit your needs, you can mixin a new function that will be part of every subsequent `EventChain` you create.
+
+For example, say you wanted to add a `forever` function. You want to be able to do something like this: `eventChain.forever().orUntil(...)`. You can mixin that function like so:
+
+    EventChain.mixin('forever', function(context, steps) {
+      return function() {
+        steps.push(function() {});
+        return this;
+      };
+    });
+
+All the core methods of `EventChain` are "built-in" mixins.
+
 ## Available Methods
 
 Here's what the chain can do for you.
