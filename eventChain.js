@@ -104,7 +104,7 @@ ig.module(
     };
   });
 
-  global.EventChain.mixin('every', function(context, steps) {
+  global.EventChain.mixin('every', function(context) {
     return function(sec, doThis) {
       return this.during(
         global.EventChain(context)
