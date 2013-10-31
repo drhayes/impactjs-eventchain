@@ -27,7 +27,7 @@
     "mocha": "*",
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.3.0",
-    "grunt-simple-mocha": "~0.3.2",
+    "grunt-simple-mocha": "*",
     "grunt-contrib-watch": "~0.3.1"
   },
   "scripts": {

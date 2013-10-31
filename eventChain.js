@@ -91,7 +91,7 @@ ig.module(
         if (times > 0) {
           var args = stepsCopy.slice(0);
           args.unshift(1, 0);
-          [].splice.apply(steps, args);
+          Array.prototype.splice.apply(steps, args);
         } else {
           // For successive repeats.
           times = originalTimes;
