@@ -12,21 +12,28 @@ ig.module(
   var mixins = {};
 
   global.EventChain = function(context) {
-    var steps, update;
+    var steps, stepsCopy, update;
 
     steps = [];
 
     // Called every frame.
     update = function() {
+      if (!stepsCopy || !stepsCopy.length) {
+        stepsCopy = steps.slice(0);
+      }
       if (steps && steps.length) {
         steps[0]();
       }
     };
 
-    for (var name in mixins)
-    {
+    for (var name in mixins) {
       update[name] = mixins[name](context, steps);
     }
+
+    update.reset = function() {
+      var args = [1, 0].concat(stepsCopy.slice(0));
+      Array.prototype.splice.apply(steps, args);
+    };
 
     // Returned from this factory thing.
     return update;

@@ -285,7 +285,7 @@ describe('eventChain', function() {
     var Fake = function() {
       // This is supposed to mimic an Entity's currentAnim property.
       this.currentAnim = {
-        loopCount: 0 
+        loopCount: 0
       };
       this.chain = EventChain(this)
         .waitForAnimation()
@@ -309,7 +309,7 @@ describe('eventChain', function() {
     var Fake = function() {
       // This is supposed to mimic an Entity's currentAnim property.
       this.currentAnim = {
-        loopCount: 0 
+        loopCount: 0
       };
       this.chain = EventChain(this)
         .waitForAnimation(2)
@@ -352,5 +352,48 @@ describe('eventChain', function() {
     assert(context.usedArg === 'argument');
     chain();
     assert(context.addedStep);
+  });
+
+  it('allows chains to be re-used', function() {
+    var one = false;
+    var two = false;
+    var three = false;
+    var chain = EventChain()
+      .then(function() {
+        one = true;
+      })
+      .then(function() {
+        two = true;
+      })
+      .then(function() {
+        three = true;
+      });
+    assert(!one);
+    assert(!two);
+    assert(!three);
+    chain();
+    assert(one);
+    assert(!two);
+    assert(!three);
+    chain();
+    assert(two);
+    assert(!three);
+    chain();
+    assert(three);
+
+    chain.reset();
+    one = false;
+    two = false;
+    three = false;
+
+    chain();
+    assert(one);
+    assert(!two);
+    assert(!three);
+    chain();
+    assert(two);
+    assert(!three);
+    chain();
+    assert(three);
   });
 });
