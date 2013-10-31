@@ -28,7 +28,7 @@ To use EventChain in your code, add its full name to the `require` statement in 
        // ... other modules go here ...
        'game.system.eventChain'
     ).define(//...
-    
+
 You should be all set.
 
 ## Usage
@@ -57,6 +57,12 @@ And then invoke it in your `update` method like so:
     update: function() {
       this.chain();
     },
+
+Event chains are also re-usable. After the last step of your chain, call the method `reset` on it like this:
+
+    this.chain.reset();
+
+The chain will begin again from the first step and proceed down the links.
 
 ## Mixins
 
