@@ -55,6 +55,25 @@ ig.module(
     };
   });
 
+  global.EventChain.mixin('thenUntil', function(context, steps) {
+    return function(doThis, predicate) {
+      steps.push(function() {
+        if( !predicate.call(context) ){
+          doThis.call(context);
+        }
+        
+        if( predicate.call(context) ){
+          steps.shift();
+          var func = steps[0];
+          if( func ){
+            func();
+          }
+        }
+      });
+      return this;
+    };
+  });
+  
   global.EventChain.mixin('wait', function(context, steps) {
     return function(secs) {
       var decrement = secs;

@@ -89,6 +89,12 @@ Here's what the chain can do for you.
 
 The workhorse of an `EventChain`. When this link is reached your `callback` will be executed.
 
+### `thenUntil`
+    
+    .thenUntil( doThis, untilThis )
+    
+## Repeatedly calls doThis and blocks the chain until untilThis returns true.
+
 ### `wait`
 
     .wait(numberOfSeconds)

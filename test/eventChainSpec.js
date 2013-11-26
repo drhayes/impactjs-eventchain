@@ -34,7 +34,7 @@ describe('eventChain', function() {
   });
 
   it('defines some functions', function() {
-    var operators = ['then', 'wait', 'during', 'repeat', 'every'];
+    var operators = ['then', 'thenUntil', 'wait', 'during', 'repeat', 'every'];
     operators.forEach(function(operator) {
       assert(chain[operator]);
     });
@@ -59,6 +59,69 @@ describe('eventChain', function() {
       chain();
       chain();
       assert(counter === 2);
+  });
+
+  it("has a thenUntil function that executes while 'until' predicate is false", function(){
+    var counter_a = 0;
+    var counter_b = 0;
+    var counter_c = 0;
+    
+    chain
+      .thenUntil( function(){ counter_a += 1; },
+                  function(){ return counter_a == 3; } )
+      .then( function(){
+        counter_b = 10;
+      })
+      .then( function(){
+        counter_a = -1;
+        counter_b = -2;
+      }).thenUntil( function(){ counter_c += 2; },
+                    function(){ return counter_c == 6; } ).
+      then( function(){
+        counter_a = 100;
+        counter_b = 200;
+        counter_c = 300;
+      });
+      
+    
+    assert( counter_a === 0 );
+    assert( counter_b === 0 );
+    assert( counter_c === 0 );
+
+    chain();
+    assert( counter_a === 1 );
+    assert( counter_b === 0 );
+    assert( counter_c === 0 );
+    
+    chain();
+    assert( counter_a === 2 );
+    assert( counter_b === 0 );
+    assert( counter_c === 0 );
+
+    chain(); 
+    assert( counter_a === 3 );
+    assert( counter_b === 10 );
+    assert( counter_c === 0 );
+    
+    chain();
+    assert( counter_a === -1 );
+    assert( counter_b === -2 );
+    assert( counter_c === 0 );
+    
+    chain();
+    assert( counter_a === -1 );
+    assert( counter_b === -2 );
+    assert( counter_c === 2 );
+    
+    chain();
+    assert( counter_a === -1 );
+    assert( counter_b === -2 );
+    assert( counter_c === 4 );
+  
+    chain();
+    assert( counter_a === 100 );
+    assert( counter_b === 200 );
+    assert( counter_c === 300 );
   });
 
   it('can wait before executing', function() {
