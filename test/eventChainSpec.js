@@ -67,16 +67,16 @@ describe('eventChain', function() {
     var counter_c = 0;
     
     chain
-      .thenUntil( function(){ counter_a += 1 },
-                  function(){ return counter_a == 3 } )
+      .thenUntil( function(){ counter_a += 1; },
+                  function(){ return counter_a == 3; } )
       .then( function(){
         counter_b = 10;
       })
       .then( function(){
         counter_a = -1;
         counter_b = -2;
-      }).thenUntil( function(){ counter_c += 2 },
-                    function(){ return counter_c == 6 } ).
+      }).thenUntil( function(){ counter_c += 2; },
+                    function(){ return counter_c == 6; } ).
       then( function(){
         counter_a = 100;
         counter_b = 200;
