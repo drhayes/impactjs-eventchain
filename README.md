@@ -91,9 +91,15 @@ The workhorse of an `EventChain`. When this link is reached your `callback` will
 
 ### `thenUntil`
     
-    .thenUntil( doThis, untilThis )
+    .thenUntil(doThis, untilThis)
     
-## Repeatedly calls doThis and blocks the chain until untilThis returns true.
+Repeatedly calls doThis and blocks the chain until untilThis returns true.
+
+### `waitUntil`
+    
+    .waitUntil(waitCondition)
+    
+Waits until waitCondition returns true.
 
 ### `wait`
 

@@ -61,6 +61,22 @@ describe('eventChain', function() {
       assert(counter === 2);
   });
 
+  it("has a waitUntil function that waits until the predicate returns true", function(){
+    var counter_a = 0;
+    var counter_b = 0;
+    
+    chain
+      .waitUntil( function(){ return counter_a > 0; } )
+      .then( function(){ counter_b = 1; });
+    
+    assert( counter_a === 0 );
+    chain();
+    assert( counter_a === 0 );
+    counter_a = 1;
+    chain();
+    assert( counter_b === 1 );    
+  });
+
   it("has a thenUntil function that executes while 'until' predicate is false", function(){
     var counter_a = 0;
     var counter_b = 0;
