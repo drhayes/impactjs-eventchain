@@ -1,13 +1,16 @@
 {
   "name": "impactjs-eventchain",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utility to help time sequential events in ImpactJS.",
   "homepage": "https://github.com/drhayes/impactjs-eventchain",
-  "author": "David Hayes <drhayes@gmail.com> (http://davidrhayes.com)",
+  "author": "David Hayes <drhayes@gmail.com> (http://drhayes.io)",
   "keywords": [
     "impactjs"
   ],
   "main": "./eventChain.js",
+  "scripts": {
+      "test": "node_modules/jshint/bin/jshint eventChain.js **/*.js && node_modules/mocha/bin/mocha"
+    },
   "engines": {
     "node": "*"
   },
@@ -24,13 +27,7 @@
     }
   ],
   "devDependencies": {
-    "mocha": "*",
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.3.0",
-    "grunt-simple-mocha": "*",
-    "grunt-contrib-watch": "~0.3.1"
-  },
-  "scripts": {
-    "test": "grunt travis --verbose"
+    "mocha": "~1.17.1",
+    "jshint": "~2.4.3"
   }
 }

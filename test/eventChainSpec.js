@@ -1,5 +1,7 @@
-/*global require: true, global: true, describe: true, beforeEach: true,
-  it: true */
+/* global require, global, describe, beforeEach, it */
+
+'use strict';
+
 var assert = require('assert');
 
 // Fake the Impact global namespace with good enough definitions.
@@ -20,8 +22,8 @@ var ig = global.ig = {
   }
 };
 
-// The module declares EventChain globally.
-var EventChain = require('../eventChain.js').EventChain;
+// The module declares eventChain globally.
+var eventChain = require('../eventChain.js').EventChain;
 
 describe('eventChain', function() {
   var chain;
@@ -30,7 +32,7 @@ describe('eventChain', function() {
     // Reset ig namespace state.
     ig.system.tick = 0;
     // Instantiate a new chain.
-    chain = EventChain();
+    chain = eventChain();
   });
 
   it('defines some functions', function() {
@@ -54,11 +56,11 @@ describe('eventChain', function() {
         counter += 1;
       });
       // Now invoke it four times.
-      chain();
-      chain();
-      chain();
-      chain();
-      assert(counter === 2);
+    chain();
+    chain();
+    chain();
+    chain();
+    assert(counter === 2);
   });
 
   it('can wait before executing', function() {
@@ -148,7 +150,7 @@ describe('eventChain', function() {
       this.callback = function() {
         this.called = true;
       };
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .then(this.callback);
     };
     var f = new Fake();
@@ -162,7 +164,7 @@ describe('eventChain', function() {
       this.callback = function() {
         this.called = true;
       };
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .wait(1)
         .during(this.callback);
     };
@@ -178,7 +180,7 @@ describe('eventChain', function() {
       this.callback = function() {
         this.called = true;
       };
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .wait(1)
         .every(0.1, this.callback);
     };
@@ -214,7 +216,7 @@ describe('eventChain', function() {
   it('can predicate a wait with a context', function() {
     var Fake = function() {
       this.counter = 0;
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .wait(5)
         .orUntil(function() {
           if (this.counter > 5) {
@@ -287,7 +289,7 @@ describe('eventChain', function() {
       this.currentAnim = {
         loopCount: 0
       };
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .waitForAnimation()
         .then(function() {
           done = true;
@@ -304,14 +306,15 @@ describe('eventChain', function() {
     assert(done);
   });
 
-  it('can wait for current animation to run n times if none specified', function() {
+  it('can wait for current animation to run n times if ' +
+      'none specified', function() {
     var done = false;
     var Fake = function() {
       // This is supposed to mimic an Entity's currentAnim property.
       this.currentAnim = {
         loopCount: 0
       };
-      this.chain = EventChain(this)
+      this.chain = eventChain(this)
         .waitForAnimation(2)
         .then(function() {
           done = true;
@@ -337,7 +340,7 @@ describe('eventChain', function() {
       usedArg: null,
       addedStep: false
     };
-    EventChain.mixin('mixinTest', function(context, steps) {
+    eventChain.mixin('mixinTest', function(context, steps) {
       return function(arg) {
         context.usedArg = arg;
         steps.push(function() {
@@ -347,7 +350,7 @@ describe('eventChain', function() {
         return this;
       };
     });
-    var chain = EventChain(context)
+    var chain = eventChain(context)
       .mixinTest('argument');
     assert(context.usedArg === 'argument');
     chain();
@@ -358,7 +361,7 @@ describe('eventChain', function() {
     var one = false;
     var two = false;
     var three = false;
-    var chain = EventChain()
+    var chain = eventChain()
       .then(function() {
         one = true;
       })
