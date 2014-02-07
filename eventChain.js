@@ -61,7 +61,7 @@ ig.module(
         if( !predicate.call(context) ){
           doThis.call(context);
         }
-        
+
         if( predicate.call(context) ){
           steps.shift();
           var func = steps[0];
@@ -73,15 +73,17 @@ ig.module(
       return this;
     };
   });
-  
+
   global.EventChain.mixin('waitUntil', function(context, steps) {
     return function(predicate) {
-      var doThis = function(){ return; }
+      var doThis = function() {
+        return;
+      };
       steps.push(function() {
         if( !predicate.call(context) ){
           doThis.call(context);
         }
-        
+
         if( predicate.call(context) ){
           steps.shift();
           var func = steps[0];

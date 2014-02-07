@@ -63,83 +63,85 @@ describe('eventChain', function() {
     assert(counter === 2);
   });
 
-  it("has a waitUntil function that waits until the predicate returns true", function(){
-    var counter_a = 0;
-    var counter_b = 0;
-    
+  it('has a waitUntil function that waits until the predicate ' +
+      'returns true', function(){
+    var counterA = 0;
+    var counterB = 0;
+
     chain
-      .waitUntil( function(){ return counter_a > 0; } )
-      .then( function(){ counter_b = 1; });
-    
-    assert( counter_a === 0 );
+      .waitUntil( function(){ return counterA > 0; } )
+      .then( function(){ counterB = 1; });
+
+    assert( counterA === 0 );
     chain();
-    assert( counter_a === 0 );
-    counter_a = 1;
+    assert( counterA === 0 );
+    counterA = 1;
     chain();
-    assert( counter_b === 1 );    
+    assert( counterB === 1 );
   });
 
-  it("has a thenUntil function that executes while 'until' predicate is false", function(){
-    var counter_a = 0;
-    var counter_b = 0;
-    var counter_c = 0;
-    
+  it('has a thenUntil function that executes while ' +
+      '"until" predicate is false', function(){
+    var counterA = 0;
+    var counterB = 0;
+    var counterC = 0;
+
     chain
-      .thenUntil( function(){ counter_a += 1; },
-                  function(){ return counter_a == 3; } )
+      .thenUntil( function(){ counterA += 1; },
+                  function(){ return counterA === 3; } )
       .then( function(){
-        counter_b = 10;
+        counterB = 10;
       })
       .then( function(){
-        counter_a = -1;
-        counter_b = -2;
-      }).thenUntil( function(){ counter_c += 2; },
-                    function(){ return counter_c == 6; } ).
+        counterA = -1;
+        counterB = -2;
+      }).thenUntil( function(){ counterC += 2; },
+                    function(){ return counterC === 6; } ).
       then( function(){
-        counter_a = 100;
-        counter_b = 200;
-        counter_c = 300;
+        counterA = 100;
+        counterB = 200;
+        counterC = 300;
       });
-      
-    
-    assert( counter_a === 0 );
-    assert( counter_b === 0 );
-    assert( counter_c === 0 );
+
+
+    assert( counterA === 0 );
+    assert( counterB === 0 );
+    assert( counterC === 0 );
 
     chain();
-    assert( counter_a === 1 );
-    assert( counter_b === 0 );
-    assert( counter_c === 0 );
-    
-    chain();
-    assert( counter_a === 2 );
-    assert( counter_b === 0 );
-    assert( counter_c === 0 );
+    assert( counterA === 1 );
+    assert( counterB === 0 );
+    assert( counterC === 0 );
 
-    chain(); 
-    assert( counter_a === 3 );
-    assert( counter_b === 10 );
-    assert( counter_c === 0 );
-    
     chain();
-    assert( counter_a === -1 );
-    assert( counter_b === -2 );
-    assert( counter_c === 0 );
-    
+    assert( counterA === 2 );
+    assert( counterB === 0 );
+    assert( counterC === 0 );
+
     chain();
-    assert( counter_a === -1 );
-    assert( counter_b === -2 );
-    assert( counter_c === 2 );
-    
+    assert( counterA === 3 );
+    assert( counterB === 10 );
+    assert( counterC === 0 );
+
     chain();
-    assert( counter_a === -1 );
-    assert( counter_b === -2 );
-    assert( counter_c === 4 );
-  
+    assert( counterA === -1 );
+    assert( counterB === -2 );
+    assert( counterC === 0 );
+
     chain();
-    assert( counter_a === 100 );
-    assert( counter_b === 200 );
-    assert( counter_c === 300 );
+    assert( counterA === -1 );
+    assert( counterB === -2 );
+    assert( counterC === 2 );
+
+    chain();
+    assert( counterA === -1 );
+    assert( counterB === -2 );
+    assert( counterC === 4 );
+
+    chain();
+    assert( counterA === 100 );
+    assert( counterB === 200 );
+    assert( counterC === 300 );
   });
 
   it('can wait before executing', function() {
